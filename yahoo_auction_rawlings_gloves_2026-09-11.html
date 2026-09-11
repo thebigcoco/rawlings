@@ -27,8 +27,11 @@ img.thumb { width: 90px; height: 90px; object-fit: contain; display: block; }
 .meta { background: #f7f7f7; padding: 8px 10px; border: 1px solid #ddd; margin: 8px 0; font-size: 13px; line-height: 1.35; }
 .meta .line { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
 .meta .keywords { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; color: #555; }
-.filters { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
-.filters select { padding: 4px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+.filter-label { color: #444; margin-right: 2px; }
+.filter-tag { border: 1px solid #bbb; border-radius: 999px; background: #fff; color: #333; padding: 5px 12px; cursor: pointer; font: inherit; line-height: 1.2; }
+.filter-tag.active { background: #111827; border-color: #111827; color: #fff; font-weight: bold; }
+.filter-tag:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 [hidden] { display: none !important; }
 .small { font-size: 12px; color: #555; }
 a { color: #0645ad; }
@@ -39,15 +42,14 @@ a { color: #0645ad; }
 <div class="meta">
 <div class="line">
 <span>來源：<a href="https://auctions.yahoo.co.jp/list4/2084032394-category.html">Yahoo!オークション 野球グローブ分類</a></span>
-<span>產生：2026-09-11 09:31:05</span>
+<span>產生：2026-09-11 09:51:48</span>
 <span>匯率：1 JPY = 0.1969 TWD</span>
 <span>結果：233 筆</span>
 <span>Vintage：26 筆</span>
 <span>型號未明記：45 筆</span>
 </div>
 <div class="keywords" title="Rawlings HOH, Rawlings Vintage, Asics Rawlings, Rawlings Asics, ローリングス HOH, ローリングス アシックス, アシックス ローリングス, ヴィンテージ Rawlings, ヴィンテージ ローリングス, Adidas, アディダス">關鍵字：Rawlings HOH, Rawlings Vintage, Asics Rawlings, Rawlings Asics, ローリングス HOH, ローリングス アシックス, アシックス ローリングス, ヴィンテージ Rawlings, ヴィンテージ ローリングス, Adidas, アディダス</div>
-<div class="filters"><label for="brandFilter">品牌</label><select id="brandFilter"><option value="all">全部</option><option value="Rawlings">Rawlings</option>
-<option value="Adidas">Adidas</option></select></div>
+<div class="filters" aria-label="品牌篩選"><span class="filter-label">品牌</span><button type="button" class="filter-tag active" data-brand-filter="all">全部</button><button type="button" class="filter-tag" data-brand-filter="Rawlings">Rawlings</button><button type="button" class="filter-tag" data-brand-filter="Adidas">Adidas</button></div>
 </div>
 <table>
 <thead><tr><th>軟式/硬式</th><th>Vintage</th><th>產品型號</th><th>價格（日幣 / 台幣）</th><th>縮圖</th><th>產品 Title</th><th>連結</th></tr></thead>
@@ -295,11 +297,14 @@ a { color: #0645ad; }
 </tbody>
 </table>
 <script>
-const brandFilter = document.getElementById("brandFilter");
-brandFilter.addEventListener("change", () => {
-  const selected = brandFilter.value;
-  document.querySelectorAll("tbody tr[data-brand]").forEach((row) => {
-    row.hidden = selected !== "all" && row.dataset.brand !== selected;
+const brandTags = document.querySelectorAll("[data-brand-filter]");
+brandTags.forEach((tag) => {
+  tag.addEventListener("click", () => {
+    const selected = tag.dataset.brandFilter;
+    brandTags.forEach((item) => item.classList.toggle("active", item === tag));
+    document.querySelectorAll("tbody tr[data-brand]").forEach((row) => {
+      row.hidden = selected !== "all" && row.dataset.brand !== selected;
+    });
   });
 });
 </script>
